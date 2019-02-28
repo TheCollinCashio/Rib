@@ -1,4 +1,4 @@
-import express from 'express'
+const express = require('express')
 
 const app = express()
 let port: Number
@@ -9,10 +9,11 @@ export function setPort(portNumber: Number) {
     port = portNumber
 }
 
-export function createDefaultRoute(request: String, filename: String) {
-    app.get(request, (req, res) => res.sendFile(__dirname + '/' + filename))
+export function setDefaultRoute(request: String, filename: String) {
+    console.log(filename)
+    app.get(request, (req, res) => res.sendFile(filename))
 }
 
-export function serveClientFolder(folderName: String) {
-    app.use(folderName, express.static(__dirname + '/' + folderName))
+export function setClientFolder(folderName: String) {
+    app.use(folderName, express.static(folderName))
 }
