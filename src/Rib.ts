@@ -1,15 +1,18 @@
 import express from 'express'
 
 const app = express()
-const port = 3000
+let port: Number
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
-export function createDefaultRoute(request, filename) {
+export function setPort(portNumber: Number) {
+    port = portNumber
+}
+
+export function createDefaultRoute(request: String, filename: String) {
     app.get(request, (req, res) => res.sendFile(__dirname + '/' + filename))
 }
 
-export function serveClientFolder(folderName) {
-    app.use('/client', express.static(__dirname + '/client'))
+export function serveClientFolder(folderName: String) {
+    app.use(folderName, express.static(__dirname + '/' + folderName))
 }
-
