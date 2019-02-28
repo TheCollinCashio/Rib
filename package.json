@@ -2,14 +2,13 @@
   "name": "rib",
   "version": "1.0.0",
   "description": "A framework for a Realtime Integrated Backend",
-  "main": "index.js",
+  "main": "dist/Rib.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "build": "tsc",
-    "start": "tsc; nodemon build/core.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "buildtest": "tsc -w",
+    "start": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -25,6 +24,11 @@
   },
   "homepage": "https://github.com/TheCollinCashio/Rib#readme",
   "devDependencies": {
+    "@typescript-eslint/parser": "^1.4.2",
+    "eslint": "^5.14.1",
     "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
   }
 }
