@@ -29,6 +29,7 @@
     "eslint": "^5.14.1",
     "nodemon": "^1.18.10",
     "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {

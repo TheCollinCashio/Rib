@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
     mode: 'none',
-    entry: ['@babel/polyfill', './CarWash/Client/src/App.jsx'],
+    entry: ['./src/client/RibClient.ts'],
     module: {
         rules: [
             {
@@ -16,7 +16,7 @@ module.exports = {
         extensions: ['*', '.ts']
     },
     output: {
-        path: path.resolve(`${__dirname}/client/`, 'build'),
-        filename: 'bundle.js'
+        path: path.resolve(`../../dist/client`, 'build'),
+        filename: 'RibClient.js'
     }
 }
