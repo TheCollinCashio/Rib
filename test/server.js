@@ -1,4 +1,4 @@
-const rib = require('../dist/Rib')
+const rib = require('../dist/server/Rib')
 
 rib.setPort(3000)
 

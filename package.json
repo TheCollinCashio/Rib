@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "buildtest": "tsc -w",
+    "buildtest": "webpack -d --watch --config ./src/client/webpack.config.js",
     "start": "nodemon"
   },
   "repository": {
@@ -27,9 +27,12 @@
     "@types/node": "^11.9.6",
     "@typescript-eslint/parser": "^1.4.2",
     "eslint": "^5.14.1",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "ts-loader": "^5.3.3",
+    "webpack-cli": "^3.2.3"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "webpack": "^4.29.6"
   }
 }

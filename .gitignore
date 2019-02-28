@@ -4,5 +4,8 @@
 ## Build Folder
 /dist
 
+#  Ignore Test Folder
+test/*
+
 ## env file
 .env
