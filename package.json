@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/TheCollinCashio/Rib#readme",
   "devDependencies": {
+    "@types/node": "^11.9.6",
     "@typescript-eslint/parser": "^1.4.2",
     "eslint": "^5.14.1",
     "nodemon": "^1.18.10"
