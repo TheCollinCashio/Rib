@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "webpack": "^4.29.6"
+    "webpack": "^4.29.6",
+    "socket.io": "^2.2.0"
   }
 }
