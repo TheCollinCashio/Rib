@@ -1,0 +1,4 @@
+{
+    "ignore":  [ "/node_modules/", "/lib/" ],
+    "presets": [ "@babel/preset-env" ]
+}
