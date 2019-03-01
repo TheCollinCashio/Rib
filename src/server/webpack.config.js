@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
     mode: 'none',
-    entry: ['./src/client/RibClient.ts'],
+    entry: ['./src/server/Rib.ts'],
     module: {
         rules: [
             {
@@ -17,6 +17,6 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, '../../dist/client'),
-        filename: 'RibClient.js'
+        filename: 'Rib.js'
     }
 }
