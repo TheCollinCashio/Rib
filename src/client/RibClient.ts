@@ -14,7 +14,7 @@ export default class RibClient {
         })
     }
 
-    call(funcName: string, data, func: (value?: any) => void) {
+    call(funcName: string, data?: any, func?: (value?: any) => void) {
         this.socket.emit(funcName, data, (res) => {
             func(res)
         })
