@@ -2,12 +2,11 @@
   "name": "rib",
   "version": "1.0.0",
   "description": "A framework for a Realtime Integrated Backend",
-  "main": "dist/Rib.js",
+  "main": "test/starter.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "nodemon test/starter.js",
     "buildtest": "webpack -d --watch --config ./test/webpack.config.js;",
     "start": "nodemon"
   },
