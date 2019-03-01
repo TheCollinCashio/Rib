@@ -1,10 +1,22 @@
-// import * as io from 'socket.io-client'
+import * as io from 'socket.io-client'
 
-// export default class RibClient {
-//     private socket: SocketIOClient.Socket
-//     constructor(urlNamespace: string) {
-//         this.socket = urlNamespace ? io(urlNamespace) : io()
-//     }
-// }
+export default class RibClient {
+    private socket: SocketIOClient.Socket
+    constructor(urlNamespace: string) {
+        this.socket = urlNamespace ? io(urlNamespace) : io()
+    }
 
-console.log('working on client side rib')
+    connected() {
+        return new Promise((resolve, reject) => {
+            this.socket.on('connect', () => {
+                resolve()
+            })
+        })
+    }
+
+    call(func: (value?: any) => void) {
+        this.socket.emit(func.name, (res) => {
+            func(res)
+        })
+    }
+}

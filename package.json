@@ -8,8 +8,7 @@
   },
   "scripts": {
     "test": "nodemon test/starter.js",
-    "buildtest-server": "webpack -d --watch --config ./src/server/webpack.config.js",
-    "buildtest-client": "webpack -d --watch --config ./src/client/webpack.config.js;",
+    "buildtest": "webpack -d --watch --config ./test/webpack.config.js;",
     "start": "nodemon"
   },
   "repository": {
@@ -30,6 +29,7 @@
     "@babel/core": "^7.3.4",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@types/express": "^4.16.1",
     "@types/node": "^11.9.6",
@@ -37,8 +37,11 @@
     "@types/socket.io-client": "^1.4.32",
     "@types/socket.io-redis": "^1.0.25",
     "@typescript-eslint/parser": "^1.4.2",
+    "babel-loader": "^8.0.5",
     "eslint": "^5.14.1",
     "nodemon": "^1.18.10",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
     "ts-loader": "^5.3.3",
     "typescript": "^3.3.3333",
     "webpack": "^4.29.6",
