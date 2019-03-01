@@ -2,7 +2,7 @@
 /node_modules
 
 ## Build Folder
-/dist
+/lib
 
 #  Ignore Test Folder
 test/*

@@ -2,8 +2,9 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "outDir": "dist",
-        "sourceMap": true
+        "outDir": "lib",
+        "sourceMap": true,
+        "declaration": true
     },
     "types": ["node"],
     "include": [
