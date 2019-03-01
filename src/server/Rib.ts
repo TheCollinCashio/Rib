@@ -35,21 +35,31 @@ export default class Rib {
         }
     }
 
-    addRoute(route: (value?: any) => void) {
-        let routeName = route.name
-        let routes = this.routes.get(routeName)
+    exposeFunction(func: (value?: any) => void) {
+        let funcName = func.name
 
-        if (routes) {
-            throw new Error(`${routeName} already exists. The function names need to be unique`)
+        if (this.routes.get(funcName)) {
+            throw new Error(`${funcName} already exists. The function names need to be unique`)
         } else {
-            
-            this.routes.set(routeName, route)
+            this.routes.set(funcName, func)
         }
     }
 
-    deleteRoute(route: (value?: any) => void) {
-        let routeName = route.name
-        this.routes.delete(routeName)
+    exposeFunctions(funcs: ((value?: any) => void)[]) {
+        for (let func of funcs) {
+            this.exposeFunction(func)
+        }
+    }
+
+    concealFunction(func: (value?: any) => void) {
+        let funcName = func.name
+        this.routes.delete(funcName)
+    }
+
+    concealFunctions(funcs: ((value?: any) => void)[]) {
+        for (let func of funcs) {
+            this.concealFunction(func)
+        }
     }
 
     setUpSocketList(socket: SocketIO.EngineSocket) {
