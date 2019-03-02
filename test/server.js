@@ -5,7 +5,6 @@ rib.setDefaultRoute('/', `${__dirname}/client/index.html`)
 rib.setClientFolder([`${__dirname}/client/build`])
 
 function sayHello(data, resolve, client) {
-    console.log(client)
     resolve(`Hi ${ data.name }`)
 }
 
