@@ -9,7 +9,7 @@ let server = new Server(app)
 
 export default class Rib {
     private io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
-    private routes = new Map<string, ((value?: any) => void)>()
+    private routes = new Map<string, Function>()
     private socketList = new Map<string, SocketIO.EngineSocket>()
 
     constructor(port: number, startMessage: string) {
@@ -36,7 +36,7 @@ export default class Rib {
         }
     }
 
-    exposeFunction(func: (value?: any) => void) {
+    exposeFunction(func: Function) {
         let funcName = func.name
 
         if (this.routes.get(funcName)) {
@@ -46,18 +46,18 @@ export default class Rib {
         }
     }
 
-    exposeFunctions(funcs: ((value?: any) => void)[]) {
+    exposeFunctions(funcs: Function[]) {
         for (let func of funcs) {
             this.exposeFunction(func)
         }
     }
 
-    concealFunction(func: (value?: any) => void) {
+    concealFunction(func: Function) {
         let funcName = func.name
         this.routes.delete(funcName)
     }
 
-    concealFunctions(funcs: ((value?: any) => void)[]) {
+    concealFunctions(funcs: Function[]) {
         for (let func of funcs) {
             this.concealFunction(func)
         }
@@ -70,7 +70,9 @@ export default class Rib {
 
     setSocketRoutes(socket: SocketIO.EngineSocket) {
         this.routes.forEach((fn, event) => {
-            socket.on(event, fn)
+            socket.on(event, (...args) => {
+                fn(...args, socket)
+            })
         })
     }
 
