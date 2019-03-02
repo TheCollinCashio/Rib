@@ -56,7 +56,7 @@ export default class RibClient {
     private setUpFunctions(keys: string[]) {
         for (let key of keys) {
             this[key] = (data? :any, func?: (value?: any) => void) => {
-                this.socket.emit(key, data, (res) => {
+                this.socket.emit(key, data, (res: any) => {
                     func(res)
                 })
             }

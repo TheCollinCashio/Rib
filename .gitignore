@@ -4,8 +4,5 @@
 ## Build Folder
 /lib
 
-#  Ignore Test Folder
-test/*
-
 ## env file
 .env
