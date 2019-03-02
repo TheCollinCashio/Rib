@@ -18,6 +18,7 @@ export default class Rib {
         this.io.on('connection', (socket: SocketIO.EngineSocket) => {
             this.setUpSocketList(socket)
             this.setSocketRoutes(socket)
+            this.sendKeysToClient(socket)
         })
     }
 
@@ -71,5 +72,10 @@ export default class Rib {
         this.routes.forEach((fn, event) => {
             socket.on(event, fn)
         })
+    }
+
+    private sendKeysToClient(socket) {
+        let keys = [...this.routes.keys()]
+        socket.emit('RibSendKeysToClient', keys)
     }
 }

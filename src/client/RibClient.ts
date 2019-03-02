@@ -6,17 +6,20 @@ export default class RibClient {
         this.socket = urlNamespace ? io(urlNamespace) : io()
     }
 
-    connected() {
-        return new Promise((resolve, reject) => {
-            this.socket.on('connect', () => {
-                resolve()
-            })
+    onConnect(cb) {
+        this.socket.on('RibSendKeysToClient', (keys: string[]) => {
+            this.setUpFunctions(keys)
+            cb()
         })
     }
 
-    call(funcName: string, data?: any, func?: (value?: any) => void) {
-        this.socket.emit(funcName, data, (res) => {
-            func(res)
-        })
+    private setUpFunctions(keys: string[]) {
+        for (let key of keys) {
+            this[key] = (data? :any, func?: (value?: any) => void) => {
+                this.socket.emit(key, data, (res) => {
+                    func(res)
+                })
+            }
+        }
     }
 }
