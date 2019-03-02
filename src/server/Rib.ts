@@ -8,18 +8,27 @@ let app = express()
 let server = new Server(app)
 
 export default class Rib {
+    private recievedKeysFromClient = false
+    private connFunc: Function
     private io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
-    private routes = new Map<string, Function>()
+    private functionMap = new Map<string, Function>()
     private socketList = new Map<string, SocketIO.EngineSocket>()
 
-    constructor(port: number, startMessage: string) {
-        server.listen(port, () => console.log(startMessage))
-
+    constructor() {
         this.io.on('connection', (socket: SocketIO.EngineSocket) => {
             this.setUpSocketList(socket)
-            this.setSocketRoutes(socket)
+            this.setSocketFunctions(socket)
             this.sendKeysToClient(socket)
+            this.setUpKeysFromClient(socket)
         })
+    }
+
+    onConnect(callback: Function) {
+        this.connFunc = callback
+    }
+
+    static startServer(port: number, startMessage: string) {
+        server.listen(port, () => console.log(startMessage))
     }
 
     setRedisUrl(url: string) {
@@ -39,10 +48,10 @@ export default class Rib {
     exposeFunction(func: Function) {
         let funcName = func.name
 
-        if (this.routes.get(funcName)) {
+        if (this.functionMap.get(funcName)) {
             throw new Error(`${funcName} already exists. The function names need to be unique`)
         } else {
-            this.routes.set(funcName, func)
+            this.functionMap.set(funcName, func)
         }
     }
 
@@ -54,7 +63,7 @@ export default class Rib {
 
     concealFunction(func: Function) {
         let funcName = func.name
-        this.routes.delete(funcName)
+        this.functionMap.delete(funcName)
     }
 
     concealFunctions(funcs: Function[]) {
@@ -68,16 +77,34 @@ export default class Rib {
         socket.on('disconnect', () => { this.socketList.delete(socket.id) })
     }
 
-    setSocketRoutes(socket: SocketIO.EngineSocket) {
-        this.routes.forEach((fn, event) => {
+    setSocketFunctions(socket: SocketIO.EngineSocket) {
+        this.functionMap.forEach((fn, event) => {
             socket.on(event, (...args) => {
                 fn(...args, socket)
             })
         })
     }
 
-    private sendKeysToClient(socket) {
-        let keys = [...this.routes.keys()]
+    private sendKeysToClient(socket: SocketIO.EngineSocket) {
+        let keys = [...this.functionMap.keys()]
         socket.emit('RibSendKeysToClient', keys)
+    }
+
+    private setUpKeysFromClient(socket: SocketIO.EngineSocket) {
+        socket.on('RibSendKeysToServer', (keys: string[]) => {
+            if (!this.recievedKeysFromClient) {
+                this.recieveKeysFromClient(keys)
+                this.connFunc()
+            }
+        })
+    }
+
+    private recieveKeysFromClient(keys: string[]) {
+        for (let key of keys) {
+            this[key] = (data?: any, func?: (value?: any) => void) => {
+                this.io.emit(key, data)
+            }
+        }
+        this.recievedKeysFromClient = true
     }
 }
