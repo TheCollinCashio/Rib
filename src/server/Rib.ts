@@ -6,16 +6,18 @@ import { Server } from 'http'
 //  Setup Socket Application
 let app = express()
 let server = new Server(app)
+let io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
 
 export default class Rib {
     private recievedKeysFromClient = false
     private connFunc: Function
-    private io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
+    private nameSpace: SocketIO.Namespace
     private functionMap = new Map<string, Function>()
     private socketList = new Map<string, SocketIORib.EngineSocket>()
 
-    constructor() {
-        this.io.on('connection', (socket: SocketIORib.EngineSocket) => {
+    constructor(nameSpace?: string) {
+        this.nameSpace = this.nameSpace ? io.of(nameSpace) : io.of('/')
+        this.nameSpace.on('connection', (socket: SocketIORib.EngineSocket) => {
             this.connFunc = this.connFunc ? this.connFunc : () => {} // keep app from breaking if user does not input a connFunc
             socket._ribRecievedKeysFromClient = false   //  socket client obj has not yet recieved keys
             this.setUpPersistentObject(socket)
@@ -34,8 +36,8 @@ export default class Rib {
         server.listen(port, () => console.log(startMessage))
     }
 
-    setRedisUrl(url: string) {
-        this.io.adapter(redisAdapter(url))
+    static setRedisUrl(url: string) {
+        io.adapter(redisAdapter(url))
     }
 
     setDefaultRoute(request: string, fileName: string) {
@@ -129,7 +131,7 @@ export default class Rib {
     private recieveKeysFromClient(keys: string[]) {
         for (let key of keys) {
             this[key] = (data?: any, func?: (value?: any) => void) => {
-                this.io.emit(key, data)
+                this.nameSpace.emit(key, data)
             }
         }
         this.recievedKeysFromClient = true

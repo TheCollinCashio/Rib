@@ -5,7 +5,7 @@ export default class RibClient {
     private functionMap = new Map<string, Function>()
 
     constructor(urlNamespace: string) {
-        this.socket = urlNamespace ? io(urlNamespace) : io()
+        this.socket = urlNamespace ? io(urlNamespace) : io('/')
     }
 
     onConnect(cb: Function) {
