@@ -111,18 +111,17 @@ export default class Rib {
 
             if (!this.recievedKeysFromClient) {
                 this.recieveKeysFromClient(keys)
-                this.connFunc()
             }
+
+            this.connFunc(this.getPersistentObject(socket))
         })
     }
 
     private recievedKeysFromClientForSocket(socket: SocketIORib.EngineSocket, keys: string[]) {
         let ribClient = this.getPersistentObject(socket)
         for (let key of keys) {
-            ribClient[key] = (data?: any, func?: (value?: any) => void) => {
-                socket.emit(key, data, (...args) => {
-                    func(...args, this.getPersistentObject(socket))
-                })
+            ribClient[key] = (...args) => {
+                socket.emit(key, ...args)
             }
         }
         socket._ribRecievedKeysFromClient = true
@@ -130,8 +129,19 @@ export default class Rib {
 
     private recieveKeysFromClient(keys: string[]) {
         for (let key of keys) {
-            this[key] = (data?: any, func?: (value?: any) => void) => {
-                this.nameSpace.emit(key, data)
+            this[key] = (...args) => {
+                if (args.length > 0) {
+                    let finalArgument = args[args.length - 1]
+                    if (finalArgument) {
+                        if (finalArgument.exclude) {
+                            let excludeSocket = finalArgument.exclude._ribSocket
+                            delete args[args.length - 1]
+                            excludeSocket.broadcast.emit(key, ...args)
+                        }
+                    }
+                } else {
+                    this.nameSpace.emit(key, ...args)
+                }
             }
         }
         this.recievedKeysFromClient = true
@@ -140,7 +150,7 @@ export default class Rib {
 
 export namespace SocketIORib {
     export interface EngineSocket extends SocketIO.EngineSocket {
-        _ribClient : any
+        _ribClient: any
         _ribRecievedKeysFromClient : boolean
     }
 }

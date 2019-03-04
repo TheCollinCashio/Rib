@@ -26,11 +26,11 @@ function tellAllClientsHello(msg) {
     console.log(msg)
 }
 
-function noLove(msg) {
+function sendMSG(msg) {
     console.log(msg)
 }
 
-myRibClient.exposeFunctions([tellAllClientsHello, noLove])
+myRibClient.exposeFunctions([tellAllClientsHello, sendMSG])
 
 
 myRibClient.onConnect(() => {
@@ -43,8 +43,12 @@ myRibClient.onConnect(() => {
         console.log(res)
     })
 
-    myRibClient.sayLove({}, res => {
-        console.log(res)
+    myRibClient.strictEqual('2', '2', (res, err) => {
+        if (err) {
+            console.error(err)
+        } else {
+            console.log(res)
+        }
     })
 })
 
