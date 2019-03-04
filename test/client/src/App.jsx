@@ -6,14 +6,25 @@ let myRibClient = new RibClient()
 export default class App extends React.Component {
     constructor(props) {
         super(props)
+
+        this.state = {
+            name: null
+        }
     }
 
     render() {
         return (
-            <div>
-                Hello, welcome to this simple app
-            </div>
+            <React.Fragment>
+                <input type="text" placeholder="Input name" onChange={(e) => this.setState({ name: e.target.value })}/>
+                <button onClick={this.submitName}>Submit name</button>
+            </React.Fragment>
         )
+    }
+
+    submitName = () => {
+        myRibClient.setName(this.state.name, res => {
+            console.log(res)
+        })
     }
 }
 
@@ -22,15 +33,11 @@ ReactDOM.render(
     document.getElementById('root')
 )
 
-function tellAllClientsHello(msg) {
-    console.log(msg)
-}
-
 function sendMSG(msg) {
     console.log(msg)
 }
 
-myRibClient.exposeFunctions([tellAllClientsHello, sendMSG])
+myRibClient.exposeFunctions([sendMSG])
 
 
 myRibClient.onConnect(() => {
@@ -38,18 +45,6 @@ myRibClient.onConnect(() => {
         <App />,
         document.getElementById('root')
     )
-
-    myRibClient.sayHello({ name: 'Collin' }, res => {
-        console.log(res)
-    })
-
-    myRibClient.strictEqual('2', '2', (res, err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log(res)
-        }
-    })
 })
 
 if (process.env.NODE_ENV !== 'production') {
