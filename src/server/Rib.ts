@@ -9,17 +9,17 @@ let server = new Server(app)
 let io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
 
 export default class Rib {
-    private recievedKeysFromClient = false
+    private isConnected = false
     private connFunc: Function
     private nameSpace: SocketIO.Namespace
-    private functionMap = new Map<string, Function>()
+    private serverFunctionMap = new Map<string, Function>()
+    private clientFunctionMap = new Map<string, Function>()
     private socketList = new Map<string, SocketIORib.EngineSocket>()
 
     constructor(nameSpace?: string) {
         this.nameSpace = this.nameSpace ? io.of(nameSpace) : io.of('/')
         this.nameSpace.on('connection', (socket: SocketIORib.EngineSocket) => {
             this.connFunc = this.connFunc ? this.connFunc : () => {} // keep app from breaking if user does not input a connFunc
-            socket._ribRecievedKeysFromClient = false   //  socket client obj has not yet recieved keys
             this.setUpPersistentObject(socket)
             this.setUpSocketList(socket)
             this.setSocketFunctions(socket)
@@ -28,6 +28,35 @@ export default class Rib {
         })
     }
 
+    /**
+        * The safest way to call functions
+        * @param funcName
+    **/
+    call(funcName, ...args) {
+        let f = this.clientFunctionMap.get(funcName)
+        if (f) {
+            f(...args)
+        } else {
+            console.error(`${f} is not an exposed function name`)
+        }
+    }
+
+    /**
+        * Sets all possible client functions
+        * @param funcNames
+    **/
+    possibleClientFunctions(funcNames: string[]) {
+        for (let funcName of funcNames) {
+            this.serverFunctionMap.set(funcName, () => {
+                console.log(`${funcName} has not been bound properly to server`)
+            })
+        }
+    }
+
+    /**
+        * Called after a rib client connects to the server
+        * @callback clientObject
+    **/
     onConnect(callback: Function) {
         this.connFunc = callback
     }
@@ -50,13 +79,14 @@ export default class Rib {
         }
     }
 
+
     exposeFunction(func: Function) {
         let funcName = func.name
 
-        if (this.functionMap.get(funcName)) {
+        if (this.serverFunctionMap.get(funcName)) {
             throw new Error(`${funcName} already exists. The function names need to be unique`)
         } else {
-            this.functionMap.set(funcName, func)
+            this.serverFunctionMap.set(funcName, func)
         }
     }
 
@@ -68,7 +98,7 @@ export default class Rib {
 
     concealFunction(func: Function) {
         let funcName = func.name
-        this.functionMap.delete(funcName)
+        this.serverFunctionMap.delete(funcName)
     }
 
     concealFunctions(funcs: Function[]) {
@@ -83,7 +113,7 @@ export default class Rib {
     }
 
     setSocketFunctions(socket: SocketIORib.EngineSocket) {
-        this.functionMap.forEach((fn, event) => {
+        this.serverFunctionMap.forEach((fn, event) => {
             socket.on(event, (...args) => {
                 fn(...args, this.getPersistentObject(socket))
             })
@@ -91,7 +121,7 @@ export default class Rib {
     }
 
     private sendKeysToClient(socket: SocketIORib.EngineSocket) {
-        let keys = [...this.functionMap.keys()]
+        let keys = [...this.serverFunctionMap.keys()]
         socket.emit('RibSendKeysToClient', keys)
     }
 
@@ -105,26 +135,46 @@ export default class Rib {
 
     private setUpKeysFromClient(socket: SocketIORib.EngineSocket) {
         socket.on('RibSendKeysToServer', (keys: string[]) => {
-            if (!socket._ribRecievedKeysFromClient) {
-                this.recievedKeysFromClientForSocket(socket, keys)
-            }
+            this.setClientFunctionMap(keys)
+            this.recievedKeysFromClientForSocket(keys)
+            this.recieveKeysFromClient(keys)
 
-            if (!this.recievedKeysFromClient) {
-                this.recieveKeysFromClient(keys)
+            if (!this.isConnected) {
+                this.connFunc(this.getPersistentObject(socket))
+                this.isConnected = true
             }
-
-            this.connFunc(this.getPersistentObject(socket))
         })
     }
 
-    private recievedKeysFromClientForSocket(socket: SocketIORib.EngineSocket, keys: string[]) {
-        let ribClient = this.getPersistentObject(socket)
+    private setClientFunctionMap(keys: string[]) {
         for (let key of keys) {
-            ribClient[key] = (...args) => {
-                socket.emit(key, ...args)
+            this.serverFunctionMap.set(key, (...args) => {
+                if (args.length > 0) {
+                    let finalArgument = args[args.length - 1]
+                    if (finalArgument) {
+                        if (finalArgument.exclude) {
+                            let excludeSocket = finalArgument.exclude._ribSocket
+                            delete args[args.length - 1]
+                            excludeSocket.broadcast.emit(key, ...args)
+                        }
+                    }
+                } else {
+                    this.nameSpace.emit(key, ...args)
+                }
+            })
+        }
+    }
+
+    private recievedKeysFromClientForSocket(keys: string[]) {
+        for (let sockId in this.socketList) {
+            let socket = this.socketList.get(sockId)
+            let ribClient = this.getPersistentObject(socket)
+            for (let key of keys) {
+                ribClient[key] = (...args) => {
+                    socket.emit(key, ...args)
+                }
             }
         }
-        socket._ribRecievedKeysFromClient = true
     }
 
     private recieveKeysFromClient(keys: string[]) {
@@ -144,13 +194,11 @@ export default class Rib {
                 }
             }
         }
-        this.recievedKeysFromClient = true
     }
 }
 
 export namespace SocketIORib {
     export interface EngineSocket extends SocketIO.EngineSocket {
         _ribClient: any
-        _ribRecievedKeysFromClient : boolean
     }
 }
