@@ -28,26 +28,13 @@ export default class Rib {
     }
 
     /**
-        * The safest way to call functions
-        * @param funcName
-    **/
-    call(funcName, ...args) {
-        let f = this.clientFunctionMap.get(funcName)
-        if (f) {
-            f(...args)
-        } else {
-            console.error(`${f} is not an exposed function name`)
-        }
-    }
-
-    /**
         * Sets all possible client functions
         * @param funcNames
     **/
     possibleClientFunctions(funcNames: string[]) {
         for (let funcName of funcNames) {
-            this.serverFunctionMap.set(funcName, () => {
-                console.log(`${funcName} has not been bound properly to server`)
+            this.clientFunctionMap.set(funcName, () => {
+                console.log(`${funcName} has not been bound properly to server`)    //  this will never be logged
             })
         }
     }
@@ -135,37 +122,41 @@ export default class Rib {
     private setUpKeysFromClient(socket: SocketIORib.EngineSocket) {
         socket.on('RibSendKeysToServer', (keys: string[]) => {
             this.setClientFunctionMap(keys)
-            this.recievedKeysFromClientForSocket(keys)
-            this.recieveKeysFromClient(keys)
+            this.recievedKeysFromClientForSocket()
+            this.recieveKeysFromClient()
             this.connFunc(this.getPersistentObject(socket))
         })
     }
 
     private setClientFunctionMap(keys: string[]) {
         for (let key of keys) {
-            this.serverFunctionMap.set(key, (...args) => {
-                if (args.length > 0) {
-                    let finalArgument = args[args.length - 1]
-                    if (finalArgument) {
-                        if (finalArgument.exclude) {
-                            let excludeSocket = finalArgument.exclude._ribSocket
-                            delete args[args.length - 1]
-                            excludeSocket.broadcast.emit(key, ...args)
+            if (!this.clientFunctionMap.get(key)) {
+                console.log(key)
+                this.clientFunctionMap.set(key, (...args) => {
+                    if (args.length > 0) {
+                        let finalArgument = args[args.length - 1]
+                        if (finalArgument) {
+                            if (finalArgument.exclude) {
+                                let excludeSocket = finalArgument.exclude._ribSocket
+                                delete args[args.length - 1]
+                                excludeSocket.broadcast.emit(key, ...args)
+                            }
                         }
+                    } else {
+                        this.nameSpace.emit(key, ...args)
                     }
-                } else {
-                    this.nameSpace.emit(key, ...args)
-                }
-            })
+                })
+            }
         }
     }
 
-    private recievedKeysFromClientForSocket(keys: string[]) {
+    private recievedKeysFromClientForSocket() {
         let socketKeys = [...this.socketList.keys()]
         for (let socketId of socketKeys) {
             let socket = this.socketList.get(socketId)
             let ribClient = this.getPersistentObject(socket)
-            for (let key of keys) {
+            let funcKeys = [...this.clientFunctionMap.keys()]
+            for (let key of funcKeys) {
                 ribClient[key] = (...args) => {
                     socket.emit(key, ...args)
                 }
@@ -173,10 +164,11 @@ export default class Rib {
         }
     }
 
-    private recieveKeysFromClient(keys: string[]) {
-        for (let key of keys) {
+    private recieveKeysFromClient() {
+        let funcKeys = [...this.clientFunctionMap.keys()]
+        for (let key of funcKeys) {
             this[key] = (...args) => {
-                if (args.length > 0) {
+                if (args.length > 1) {
                     let finalArgument = args[args.length - 1]
                     if (finalArgument) {
                         if (finalArgument.exclude) {

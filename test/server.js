@@ -15,6 +15,7 @@ myRib.setDefaultRoute('/', `${__dirname}/client/index.html`)
 myRib.setClientFolder([`${__dirname}/client/build`])
 
 function setName(name, func, client) {
+    myRib.sendMSG('Did this work?')
     client.name = name
     client.sendMSG(`Welcome, ${name}`)
     myRib.sendMSG(`Their name is ${name}...`, { exclude: client })
