@@ -28,10 +28,18 @@ export default class Rib {
     }
 
     /**
+        * Called after a rib client connects to the server
+        * @callback clientObject
+    **/
+    onConnect(callback: Function) {
+        this.connFunc = callback
+    }
+
+    /**
         * Sets all possible client functions
         * @param funcNames
     **/
-    possibleClientFunctions(funcNames: string[]) {
+   possibleClientFunctions(funcNames: string[]) {
         for (let funcName of funcNames) {
             this.clientFunctionMap.set(funcName, () => {
                 console.log(`${funcName} has not been bound properly to server`)    //  this will never be logged
@@ -40,32 +48,47 @@ export default class Rib {
     }
 
     /**
-        * Called after a rib client connects to the server
-        * @callback clientObject
+        * Starts up a server with a specified port and an optional message log
+        * @param port
+        * @param startMessage
     **/
-    onConnect(callback: Function) {
-        this.connFunc = callback
+    static startServer(port: number, startMessage?: string) {
+        server.listen(port, () => { if(startMessage) console.log(startMessage) })
     }
 
-    static startServer(port: number, startMessage: string) {
-        server.listen(port, () => console.log(startMessage))
-    }
-
+    /**
+        * Link to a redis server. This is for horizontal scaling your application
+        * More can be found on the official redis documentation at https://redis.io/
+        * @param url
+    **/
     static setRedisUrl(url: string) {
         io.adapter(redisAdapter(url))
     }
 
-    setDefaultRoute(request: string, fileName: string) {
+    /**
+        * Set a route for your application and the file to send with the associated route
+        * @param request
+        * @param fileName
+    **/
+    static setRoute(request: string, fileName: string) {
         app.get(request, (req, res) => res.sendFile(fileName))
     }
 
-    setClientFolder(folderNames: string[]) {
+    /**
+        * Set a static file that can be accessed from your app
+        * @param request
+        * @param fileName
+    **/
+    static setClientFolder(folderNames: string[]) {
         for (let folder of folderNames) {
             app.use(express.static(folder))
         }
     }
 
-
+    /**
+        * Expose a server function that can be called with ClientRib
+        * @param func
+    **/
     exposeFunction(func: Function) {
         let funcName = func.name
 
@@ -76,29 +99,41 @@ export default class Rib {
         }
     }
 
+    /**
+        * Expose an array of server functions that can be called with ClientRib
+        * @param func
+    **/
     exposeFunctions(funcs: Function[]) {
         for (let func of funcs) {
             this.exposeFunction(func)
         }
     }
 
+    /**
+        * Stop listening for requests from this function called on the client
+        * @param func
+    **/
     concealFunction(func: Function) {
         let funcName = func.name
         this.serverFunctionMap.delete(funcName)
     }
 
+    /**
+        * Stop listening for requests from these functions called on the client
+        * @param func
+    **/
     concealFunctions(funcs: Function[]) {
         for (let func of funcs) {
             this.concealFunction(func)
         }
     }
 
-    setUpSocketList(socket: SocketIORib.EngineSocket) {
+    private setUpSocketList(socket: SocketIORib.EngineSocket) {
         this.socketList.set(socket.id, socket)
         socket.on('disconnect', () => { this.socketList.delete(socket.id) })
     }
 
-    setSocketFunctions(socket: SocketIORib.EngineSocket) {
+    private setSocketFunctions(socket: SocketIORib.EngineSocket) {
         this.serverFunctionMap.forEach((fn, event) => {
             socket.on(event, (...args) => {
                 fn(...args, this.getPersistentObject(socket))
