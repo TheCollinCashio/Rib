@@ -16,9 +16,7 @@ myRib.setClientFolder([`${__dirname}/client/build`])
 
 function setName(name, func, client) {
     client.name = name
-
     client.sendMSG(`Welcome, ${name}`)
-    client.bindLog()
     myRib.sendMSG(`Their name is ${name}...`, { exclude: client })
     func('Name set on server')
 }

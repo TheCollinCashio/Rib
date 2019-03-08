@@ -1,7 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import blue from '@material-ui/core/colors/blue'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
 import RibClient from '../../../lib/client/RibClient'
+
 let myRibClient = new RibClient()
+
+const theme = createMuiTheme({
+    palette: {
+        primary: blue,
+    },
+    typography: {
+        useNextVariants: true,
+    },
+})
 
 export default class App extends React.Component {
     constructor(props) {
@@ -14,10 +28,12 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                <input type="text" placeholder="Input name" onChange={(e) => this.setState({ name: e.target.value })}/>
-                <button onClick={this.submitName}>Submit name</button>
-            </React.Fragment>
+            <MuiThemeProvider theme={theme}>
+                <React.Fragment>
+                    <TextField label="Input Name" onChange={(e) => this.setState({ name: e.target.value })} />
+                    <Button color="primary" onClick={this.submitName}>Submit name</Button>
+                </React.Fragment>
+            </MuiThemeProvider>
         )
     }
 

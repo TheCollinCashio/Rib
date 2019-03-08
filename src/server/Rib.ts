@@ -9,7 +9,6 @@ let server = new Server(app)
 let io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
 
 export default class Rib {
-    private isConnected = false
     private connFunc: Function
     private nameSpace: SocketIO.Namespace
     private serverFunctionMap = new Map<string, Function>()
@@ -138,11 +137,7 @@ export default class Rib {
             this.setClientFunctionMap(keys)
             this.recievedKeysFromClientForSocket(keys)
             this.recieveKeysFromClient(keys)
-
-            if (!this.isConnected) {
-                this.connFunc(this.getPersistentObject(socket))
-                this.isConnected = true
-            }
+            this.connFunc(this.getPersistentObject(socket))
         })
     }
 
@@ -166,8 +161,9 @@ export default class Rib {
     }
 
     private recievedKeysFromClientForSocket(keys: string[]) {
-        for (let sockId in this.socketList) {
-            let socket = this.socketList.get(sockId)
+        let socketKeys = [...this.socketList.keys()]
+        for (let socketId of socketKeys) {
+            let socket = this.socketList.get(socketId)
             let ribClient = this.getPersistentObject(socket)
             for (let key of keys) {
                 ribClient[key] = (...args) => {
