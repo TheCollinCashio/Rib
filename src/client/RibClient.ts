@@ -7,12 +7,17 @@ export default class RibClient {
 
     constructor(urlNamespace?: string, notSingleton?: boolean) {
         let returnInstance = this
+
+        if (!instance && !notSingleton) {
+            instance = this
+        }
+
         if (notSingleton || !instance) {
             this.socket = urlNamespace ? io(urlNamespace) : io('/')
-            instance = this
         } else if (!notSingleton) {
             returnInstance = instance
         }
+
         return returnInstance
     }
 
