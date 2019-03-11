@@ -147,7 +147,7 @@ export default class Rib {
     }
 
     private setUpPersistentObject(socket: SocketIORib.EngineSocket) {
-        Object.assign(socket, { _ribClient: { _ribSocket: socket } })
+        Object.assign(socket, { _ribClient: { _ribSocketId: socket.id } })
     }
 
     private getPersistentObject(socket: SocketIORib.EngineSocket) {
@@ -165,23 +165,21 @@ export default class Rib {
 
     private setClientFunctionMap(keys: string[]) {
         for (let key of keys) {
-            if (!this.clientFunctionMap.get(key)) {
-                console.log(key)
-                this.clientFunctionMap.set(key, (...args) => {
-                    if (args.length > 0) {
-                        let finalArgument = args[args.length - 1]
-                        if (finalArgument) {
-                            if (finalArgument.exclude) {
-                                let excludeSocket = finalArgument.exclude._ribSocket
-                                delete args[args.length - 1]
-                                excludeSocket.broadcast.emit(key, ...args)
-                            }
+            this.clientFunctionMap.set(key, (...args) => {
+                if (args.length > 0) {
+                    let finalArgument = args[args.length - 1]
+                    if (finalArgument) {
+                        if (finalArgument.exclude) {
+                            let excludeSocketId = finalArgument.exclude._ribSocketId
+                            let excludeSocket = this.socketList.get(excludeSocketId)
+                            delete args[args.length - 1]
+                            excludeSocket.broadcast.emit(key, ...args)
                         }
-                    } else {
-                        this.nameSpace.emit(key, ...args)
                     }
-                })
-            }
+                } else {
+                    this.nameSpace.emit(key, ...args)
+                }
+            })
         }
     }
 
@@ -202,26 +200,13 @@ export default class Rib {
     private recieveKeysFromClient() {
         let funcKeys = [...this.clientFunctionMap.keys()]
         for (let key of funcKeys) {
-            this[key] = (...args) => {
-                if (args.length > 1) {
-                    let finalArgument = args[args.length - 1]
-                    if (finalArgument) {
-                        if (finalArgument.exclude) {
-                            let excludeSocket = finalArgument.exclude._ribSocket
-                            delete args[args.length - 1]
-                            excludeSocket.broadcast.emit(key, ...args)
-                        }
-                    }
-                } else {
-                    this.nameSpace.emit(key, ...args)
-                }
-            }
+            this[key] = this.clientFunctionMap.get(key)
         }
     }
 }
 
 export namespace SocketIORib {
-    export interface EngineSocket extends SocketIO.EngineSocket {
+    export interface EngineSocket extends SocketIO.Socket {
         _ribClient: any
     }
 }
