@@ -8,6 +8,9 @@ let app = express()
 let server = new Server(app)
 let io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
 
+//  Setup instance for Singleton Design Pattern
+let instance = null
+
 export default class Rib {
     private connFunc: Function
     private nameSpace: SocketIO.Namespace
@@ -15,16 +18,28 @@ export default class Rib {
     private clientFunctionMap = new Map<string, Function>()
     private socketList = new Map<string, SocketIORib.Socket>()
 
-    constructor(nameSpace?: string) {
-        this.nameSpace = this.nameSpace ? io.of(nameSpace) : io.of('/')
-        this.nameSpace.on('connection', (socket: SocketIORib.Socket) => {
-            this.connFunc = this.connFunc ? this.connFunc : () => {} // keep app from breaking if user does not input a connFunc
-            this.setUpPersistentObject(socket)
-            this.setUpSocketList(socket)
-            this.setSocketFunctions(socket)
-            this.sendKeysToClient(socket)
-            this.setUpKeysFromClient(socket)
-        })
+    constructor(nameSpace?: string, isSingleton = true) {
+        let returnInstance = this
+
+        if (isSingleton && instance) {
+            returnInstance = instance
+        } else {
+            this.nameSpace = this.nameSpace ? io.of(nameSpace) : io.of('/')
+            this.nameSpace.on('connection', (socket: SocketIORib.Socket) => {
+                this.connFunc = this.connFunc ? this.connFunc : () => {} // keep app from breaking if user does not input a connFunc
+                this.setUpPersistentObject(socket)
+                this.setUpSocketList(socket)
+                this.setSocketFunctions(socket)
+                this.sendKeysToClient(socket)
+                this.setUpKeysFromClient(socket)
+            })
+        }
+
+        if (isSingleton && !instance) {
+            instance = this
+        }
+
+        return returnInstance
     }
 
     /**
