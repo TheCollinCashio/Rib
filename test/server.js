@@ -4,6 +4,7 @@ Rib.setRoute('/', `${__dirname}/client/index.html`)
 Rib.setClientFolder([`${__dirname}/client/build`])
 
 let myRib = new Rib()
+let messages = []
 
 //  Safely expose functions
 myRib.possibleClientFunctions(['sendMSG', 'bindLog'])
@@ -20,4 +21,21 @@ function setName(name, func, client) {
     func('Name set on server')
 }
 
-myRib.exposeFunctions([setName])
+function getMessages(func, client) {
+    if(client.name) {
+        func(messages)
+    }
+}
+
+function sendMSG(message, func, client) {
+    if (client.name) {
+        let msgObj = {
+            name: client.name,
+            message: message
+        }
+        messages.push(msgObj)
+        func('MSG Sent')
+    }
+}
+
+myRib.exposeFunctions([setName, getMessages, sendMSG])

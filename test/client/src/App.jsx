@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import 'materialize-css/dist/css/materialize.min.css'
 
-import LogIn from './LogIn'
+import Name from './Name'
+import Message from './Message'
 import RibClient from '../../../lib/client/RibClient'
 let myRibClient = new RibClient()
 
@@ -20,8 +21,9 @@ export default class App extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route exact path="/" component={LogIn} />
-                    <Route component={this.LogIn} />
+                    <Route exact path="/" component={Name} />
+                    <Route exact path="/message" component={Message} />
+                    <Route component={this.Name} />
                 </Switch>
             </Router>
         )

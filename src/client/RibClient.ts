@@ -8,16 +8,16 @@ export default class RibClient {
     constructor(urlNamespace?: string, notSingleton?: boolean) {
         let returnInstance = this
 
-        if (!instance && !notSingleton) {
-            instance = this
-        }
-
         if (notSingleton || !instance) {
             this.socket = urlNamespace ? io(urlNamespace) : io('/')
         } else if (!notSingleton) {
             returnInstance = instance
         }
 
+        if (!instance && !notSingleton) {
+            instance = this
+        }
+        
         return returnInstance
     }
 
@@ -33,7 +33,6 @@ export default class RibClient {
 
     exposeFunction(func: Function) {
         let funcName = func.name
-
         if (this.functionMap.get(funcName)) {
             throw new Error(`${funcName} already exists. The function names need to be unique`)
         } else {
