@@ -11,7 +11,7 @@ let io = socket(server, { pingInterval: 3000, pingTimeout: 7500 })
 //  Setup instance for Singleton Design Pattern
 let instance = null
 
-export default class Rib {
+export class Rib {
     private connFunc: Function
     private nameSpace: SocketIO.Namespace
     private serverFunctionMap = new Map<string, Function>()
