@@ -6,3 +6,6 @@
 
 ## env file
 .env
+
+## Jetbrains project files
+.idea
