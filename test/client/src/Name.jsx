@@ -1,6 +1,6 @@
 import React from 'react'
 import M from 'materialize-css'
-import RibClient from '../../../lib/client/RibClient'
+import { RibClient } from '../../../lib/client/RibClient'
 
 let myRibClient = new RibClient()
 

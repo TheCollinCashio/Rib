@@ -5,7 +5,7 @@ import 'materialize-css/dist/css/materialize.min.css'
 
 import Name from './Name'
 import Message from './Message'
-import RibClient from '../../../lib/client/RibClient'
+import { RibClient } from '../../../lib/client/RibClient'
 let myRibClient = new RibClient()
 
 export default class App extends React.Component {

@@ -1,7 +1,7 @@
 import * as io from 'socket.io-client'
 let instance = null
 
-export default class RibClient {
+export class RibClient {
     private socket: SocketIOClient.Socket
     private functionMap = new Map<string, Function>()
 
@@ -71,5 +71,55 @@ export default class RibClient {
                 this.socket.emit(key, ...args)
             }
         }
+    }
+}
+
+export class ClientStore {
+    private data = new Map<string, any>()
+    private functionMap = new Map<string, ((value?: any) => void)[]>()
+
+    get(key: string) {
+        return this.data.get(key)
+    }
+    
+    set(key: string, value: any) {
+        this.data.set(key, value)
+
+        let funcions = this.functionMap.get(key)
+        
+        if (funcions) {
+            funcions.forEach(fn => fn(value))
+        }
+    }
+
+    delete(key: string) {
+        this.data.delete(key)
+
+        const funcions = this.functionMap.get(key)
+
+        if (funcions) {
+            funcions.forEach(fn => fn())
+        }
+    }
+
+    bindToFunction(key: string, fn: (value?: any) => void) {
+        const funcions = this.functionMap.get(key)
+
+        if (funcions) {
+            this.functionMap.set(key, [...funcions, fn])
+        } else {
+            this.functionMap.set(key, [fn])
+        }
+
+        let unBind = () => {
+            this.unBind(key, fn)
+        }
+
+        return unBind
+    }
+
+    private unBind(key: string, fnToUnbind: (value?: any) => void) {
+        const functions = this.functionMap.get(key)
+        this.functionMap.set(key, functions.filter(fn => fn !== fnToUnbind))
     }
 }
