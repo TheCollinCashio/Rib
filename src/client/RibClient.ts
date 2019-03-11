@@ -5,16 +5,16 @@ export default class RibClient {
     private socket: SocketIOClient.Socket
     private functionMap = new Map<string, Function>()
 
-    constructor(urlNamespace?: string, notSingleton?: boolean) {
+    constructor(urlNamespace?: string, isSingleton = true) {
         let returnInstance = this
 
-        if (notSingleton || !instance) {
-            this.socket = urlNamespace ? io(urlNamespace) : io('/')
-        } else if (!notSingleton) {
+        if (isSingleton && instance) {
             returnInstance = instance
+        } else {
+            this.socket = urlNamespace ? io(urlNamespace) : io('/')
         }
 
-        if (!instance && !notSingleton) {
+        if (isSingleton && !instance) {
             instance = this
         }
         
