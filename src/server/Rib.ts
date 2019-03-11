@@ -13,11 +13,11 @@ export default class Rib {
     private nameSpace: SocketIO.Namespace
     private serverFunctionMap = new Map<string, Function>()
     private clientFunctionMap = new Map<string, Function>()
-    private socketList = new Map<string, SocketIORib.EngineSocket>()
+    private socketList = new Map<string, SocketIORib.Socket>()
 
     constructor(nameSpace?: string) {
         this.nameSpace = this.nameSpace ? io.of(nameSpace) : io.of('/')
-        this.nameSpace.on('connection', (socket: SocketIORib.EngineSocket) => {
+        this.nameSpace.on('connection', (socket: SocketIORib.Socket) => {
             this.connFunc = this.connFunc ? this.connFunc : () => {} // keep app from breaking if user does not input a connFunc
             this.setUpPersistentObject(socket)
             this.setUpSocketList(socket)
@@ -128,12 +128,12 @@ export default class Rib {
         }
     }
 
-    private setUpSocketList(socket: SocketIORib.EngineSocket) {
+    private setUpSocketList(socket: SocketIORib.Socket) {
         this.socketList.set(socket.id, socket)
         socket.on('disconnect', () => { this.socketList.delete(socket.id) })
     }
 
-    private setSocketFunctions(socket: SocketIORib.EngineSocket) {
+    private setSocketFunctions(socket: SocketIORib.Socket) {
         this.serverFunctionMap.forEach((fn, event) => {
             socket.on(event, (...args) => {
                 fn(...args, this.getPersistentObject(socket))
@@ -141,20 +141,20 @@ export default class Rib {
         })
     }
 
-    private sendKeysToClient(socket: SocketIORib.EngineSocket) {
+    private sendKeysToClient(socket: SocketIORib.Socket) {
         let keys = [...this.serverFunctionMap.keys()]
         socket.emit('RibSendKeysToClient', keys)
     }
 
-    private setUpPersistentObject(socket: SocketIORib.EngineSocket) {
+    private setUpPersistentObject(socket: SocketIORib.Socket) {
         Object.assign(socket, { _ribClient: { _ribSocketId: socket.id } })
     }
 
-    private getPersistentObject(socket: SocketIORib.EngineSocket) {
+    private getPersistentObject(socket: SocketIORib.Socket) {
         return socket._ribClient
     }
 
-    private setUpKeysFromClient(socket: SocketIORib.EngineSocket) {
+    private setUpKeysFromClient(socket: SocketIORib.Socket) {
         socket.on('RibSendKeysToServer', (keys: string[]) => {
             this.setClientFunctionMap(keys)
             this.recievedKeysFromClientForSocket()
@@ -206,7 +206,7 @@ export default class Rib {
 }
 
 export namespace SocketIORib {
-    export interface EngineSocket extends SocketIO.Socket {
+    export interface Socket extends SocketIO.Socket {
         _ribClient: any
     }
 }

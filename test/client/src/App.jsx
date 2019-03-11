@@ -1,21 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import blue from '@material-ui/core/colors/blue'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import 'materialize-css/dist/css/materialize.min.css'
+
+import LogIn from './LogIn'
 import RibClient from '../../../lib/client/RibClient'
-
 let myRibClient = new RibClient()
-
-const theme = createMuiTheme({
-    palette: {
-        primary: blue,
-    },
-    typography: {
-        useNextVariants: true,
-    },
-})
 
 export default class App extends React.Component {
     constructor(props) {
@@ -28,19 +18,13 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <MuiThemeProvider theme={theme}>
-                <React.Fragment>
-                    <TextField label="Input Name" onChange={(e) => this.setState({ name: e.target.value })} />
-                    <Button color="primary" onClick={this.submitName}>Submit name</Button>
-                </React.Fragment>
-            </MuiThemeProvider>
+            <Router>
+                <Switch>
+                    <Route exact path="/" component={LogIn} />
+                    <Route component={this.LogIn} />
+                </Switch>
+            </Router>
         )
-    }
-
-    submitName = () => {
-        myRibClient.setName(this.state.name, res => {
-            console.log(res)
-        })
     }
 }
 
@@ -64,6 +48,5 @@ myRibClient.onConnect(() => {
 })
 
 if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line no-console
     console.log('Let\'s Develop great things 😏')
 }

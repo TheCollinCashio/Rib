@@ -1,11 +1,19 @@
 import * as io from 'socket.io-client'
+let instance = null
 
 export default class RibClient {
     private socket: SocketIOClient.Socket
     private functionMap = new Map<string, Function>()
 
-    constructor(urlNamespace: string) {
-        this.socket = urlNamespace ? io(urlNamespace) : io('/')
+    constructor(urlNamespace: string, notSingleton: boolean) {
+        let returnInstance = this
+        if (notSingleton || !instance) {
+            this.socket = urlNamespace ? io(urlNamespace) : io('/')
+            instance = this
+        } else if (!notSingleton) {
+            returnInstance = instance
+        }
+        return returnInstance
     }
 
     onConnect(cb: Function) {
