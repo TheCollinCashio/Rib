@@ -1,4 +1,4 @@
-import Rib from '../lib/server/Rib'
+import { Rib } from '../lib/server/Rib'
 Rib.startServer(5000, 'This is much easier to program')
 Rib.setRoute('/', `${__dirname}/client/index.html`)
 Rib.setClientFolder([`${__dirname}/client/build`])
