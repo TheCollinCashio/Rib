@@ -83,7 +83,7 @@ export class ClientStore {
     }
 
     set(obj: object, addFunc?: (value?: any) => void) {
-        let returnFunc = null
+        let unBindFunctions = []
 
         for (let key in obj) {
             this.data.set(key, obj[key])
@@ -91,7 +91,7 @@ export class ClientStore {
             let functions = this.functionMap.get(key)
             
             if (functions) {
-                functions.forEach(fn => fn({ [key]: obj[key]} ))
+                functions.forEach(fn => fn({ [key]: obj[key] }))
             }
 
             if (addFunc) {
@@ -101,43 +101,23 @@ export class ClientStore {
                     this.functionMap.set(key, [addFunc])
                 }
 
-                returnFunc = () => {
+                unBindFunctions.push(() => {
                     this.unBind(key, addFunc)
-                }
+                })
             }
         }
 
-        return returnFunc
-    }
-
-    get(key: string) {
-        return this.data.get(key)
-    }
-
-    delete(key: string) {
-        this.data.delete(key)
-
-        const funcions = this.functionMap.get(key)
-
-        if (funcions) {
-            funcions.forEach(fn => fn())
+        return () => {
+            unBindFunctions.forEach(f => f())
         }
     }
 
-    bindToFunction(key: string, fn: (value?: any) => void) {
-        const funcions = this.functionMap.get(key)
-
-        if (funcions) {
-            this.functionMap.set(key, [...funcions, fn])
-        } else {
-            this.functionMap.set(key, [fn])
+    get(obj : object) {
+        let returnObj = {}
+        for (let key in obj) {
+            returnObj[key] = this.data.get(key) || obj[key]
         }
-
-        let unBind = () => {
-            this.unBind(key, fn)
-        }
-
-        return unBind
+        return returnObj
     }
 
     private unBind(key: string, fnToUnbind: (value?: any) => void) {

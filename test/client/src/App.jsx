@@ -33,10 +33,10 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        appStore.set({ name: null }, this.updateName)
+        this.unbind = appStore.set({ name: null, theme: {} }, this.updateState)
     }
 
-    updateName = (newState) => {
+    updateState = (newState) => {
         this.setState(newState)
     }
 }
