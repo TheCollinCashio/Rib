@@ -67,4 +67,4 @@ myRib.exposeFunctions([sendMSG])   //  allows us to call sendMSG from the server
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
