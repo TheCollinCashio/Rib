@@ -1,4 +1,4 @@
-export default class RibStore {
+export default class RibClientStore {
     private data = new Map<string, any>()
     private functionMap = new Map<string, ((value?: any) => void)[]>()
 

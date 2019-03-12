@@ -1,6 +1,6 @@
-import Store from '../../../../lib/client/RibStore'
+import RibClientStore from '../../../../lib/client/RibClientStore'
 
-let appStore = new Store({
+let appStore = new RibClientStore({
     name: null,
     theme: {
         color: 'blue'
