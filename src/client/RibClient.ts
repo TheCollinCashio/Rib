@@ -78,18 +78,40 @@ export class ClientStore {
     private data = new Map<string, any>()
     private functionMap = new Map<string, ((value?: any) => void)[]>()
 
+    constructor(obj: object) {
+        this.set(obj)
+    }
+
+    set(obj: object, addFunc?: (value?: any) => void) {
+        let returnFunc = null
+
+        for (let key in obj) {
+            this.data.set(key, obj[key])
+
+            let functions = this.functionMap.get(key)
+            
+            if (functions) {
+                functions.forEach(fn => fn({ [key]: obj[key]} ))
+            }
+
+            if (addFunc) {
+                if (functions) {
+                    this.functionMap.set(key, [...functions, addFunc])
+                } else {
+                    this.functionMap.set(key, [addFunc])
+                }
+
+                returnFunc = () => {
+                    this.unBind(key, addFunc)
+                }
+            }
+        }
+
+        return returnFunc
+    }
+
     get(key: string) {
         return this.data.get(key)
-    }
-    
-    set(key: string, value: any) {
-        this.data.set(key, value)
-
-        let funcions = this.functionMap.get(key)
-        
-        if (funcions) {
-            funcions.forEach(fn => fn(value))
-        }
     }
 
     delete(key: string) {
