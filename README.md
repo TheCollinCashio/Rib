@@ -1,5 +1,5 @@
-# Rib
-A framework for a Realtime Integrated Backend 🥩
+# Rib 🥩
+A framework for a Realtime Integrated Backend
 
 ## Getting Started
 
@@ -7,7 +7,7 @@ These instructions will show you how simple it is to create a real time applicat
 
 ### Prerequisites
 
-First, you are going to need to install Rib for the dynamic server communication as well as some simple functions to start your server 🥩.
+First, you are going to need to install Rib for the dynamic server communication as well as some simple functions to start your server.
 
 ```
 npm i Rib
