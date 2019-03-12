@@ -8,12 +8,15 @@ import Message from './Message'
 import { RibClient } from '../../../lib/client/RibClient'
 let myRibClient = new RibClient()
 
+import appStore from './stores/appStore'
+
 export default class App extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            name: null
+            name: null,
+            stat: 'Hello'
         }
     }
 
@@ -27,6 +30,14 @@ export default class App extends React.Component {
                 </Switch>
             </Router>
         )
+    }
+
+    componentDidMount() {
+        appStore.set({ name: null }, this.updateName)
+    }
+
+    updateName = (newState) => {
+        this.setState(newState)
     }
 }
 

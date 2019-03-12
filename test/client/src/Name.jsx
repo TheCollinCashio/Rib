@@ -3,10 +3,17 @@ import M from 'materialize-css'
 import { RibClient } from '../../../lib/client/RibClient'
 
 let myRibClient = new RibClient()
+import appStore from './stores/appStore'
 
 export default class Name extends React.Component {
     constructor(props){
         super(props)
+
+        this.state = {
+            name: null
+        }
+
+        this.unBind = appStore.set(this.state, this.changeState)
     }
 
     render(){
@@ -20,7 +27,7 @@ export default class Name extends React.Component {
                                 <div className="row">
                                 <div className="input-field col s12">
                                     <label>Name</label>
-                                    <input onChange={ e => this.setState({ name: e.target.value }) } type='text' className="validate" />
+                                    <input onChange={ e => this.nameChanged(e) } type='text' className="validate" />
                                 </div>
                                 </div>
                             </div>
@@ -36,6 +43,18 @@ export default class Name extends React.Component {
 
     componentDidMount() {
         M.AutoInit()
+    }
+
+    componentWillUnmount() {
+        this.unBind()
+    }
+
+    nameChanged(e) {
+        appStore.set({ name: e.target.value })
+    }
+
+    changeState = (newState) => {
+        this.setState(newState)
     }
 
     submitName = (e) => {
