@@ -27,8 +27,7 @@ npm install rib-store
 
 ## Usage
 
-On the server we have,
-
+#### Server.js
 ```js
 let RibServer = require('rib-server')
 RibServer.startServer(5000, 'This is much easier to program')
@@ -47,8 +46,7 @@ function logMessage(msg) {
 myRib.exposeFunction(logMessage)    // allows us to call logMessage from the client
 ```
 
-& on the client we have,
-
+#### Client.js
 ```js
 let RibClient = require('rib-client') // or import using a CDN
 let myRib = new RibClient()
