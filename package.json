@@ -2,12 +2,12 @@
   "name": "rib",
   "version": "1.0.0",
   "description": "A framework for a Realtime Integrated Backend",
-  "main": "test/starter.js",
+  "main": "starter.js",
   "directories": {
-    "test": "test"
+    "client": "client"
   },
   "scripts": {
-    "buildtest": "webpack -d --watch --config ./test/webpack.config.js;",
+    "buildtest": "webpack -d --watch --config ./webpack.config.js;",
     "start": "nodemon"
   },
   "repository": {
@@ -15,7 +15,13 @@
     "url": "git+https://github.com/TheCollinCashio/Rib.git"
   },
   "keywords": [
-    "backend"
+    "realtime",
+    "integrated",
+    "backend",
+    "framework",
+    "js",
+    "node",
+    "live"
   ],
   "author": "Collin Cashio & Tyler Carr",
   "license": "MIT",
@@ -24,39 +30,28 @@
   },
   "homepage": "https://github.com/TheCollinCashio/Rib#readme",
   "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
-    "@types/express": "^4.16.1",
-    "@types/node": "^11.11.1",
-    "@types/socket.io": "^2.1.2",
-    "@types/socket.io-client": "^1.4.32",
-    "@types/socket.io-redis": "^1.0.25",
-    "@typescript-eslint/parser": "^1.4.2",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.1",
-    "eslint": "^5.15.1",
-    "eslint-plugin-typescript": "^0.14.0",
     "materialize-css": "^1.0.0",
-    "nodemon": "^1.18.10",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-router-dom": "^4.3.1",
+    "rib-client": "^1.0.1",
+    "rib-server": "^1.0.2",
+    "rib-store": "^1.0.1",
     "style-loader": "^0.23.1",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.3.3333",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
-  },
-  "dependencies": {
-    "express": "^4.16.4",
-    "http": "0.0.0",
-    "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0",
-    "socket.io-redis": "^5.2.0"
   }
 }
