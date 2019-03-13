@@ -46,8 +46,6 @@ export default class Message extends React.Component {
         myRibClient.getMessages(messages => {
             this.setState({ messages })
         })
-
-        myRibClient.exposeFunction(this.updateMessages)
     }
 
     sendMessage = (e) => {

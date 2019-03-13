@@ -33,7 +33,7 @@ On the server we have,
 let RibServer = require('rib-server')
 RibServer.startServer(5000, 'This is much easier to program')
 RibServer.setRoute('/', `${__dirname}/client/index.html`)
-RibServer.setClientFolder([`${__dirname}/client/build`])
+RibServer.setClientFolder(`${__dirname}/client/build`)
 
 let myRib = new RibServer()
 myRib.onConnect((client) => {
