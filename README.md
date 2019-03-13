@@ -10,19 +10,19 @@ These instructions will show you how simple it is to create a real time applicat
 First, you are going to need to install Rib for the dynamic server communication as well as some simple functions to start your server.
 
 ```
-npm i Rib
+npm install rib-server
 ```
 
 Next, you are going to need to install RibClient for the dynamic client communication 👨🏻‍💻:
 ```
-npm i RibClient
+npm install rib-client
 ```
 
 #### Optional 🏬
 If you would like to install RibClientStore, a simple state management solution for frontend frameworks, please install the following:
 
 ```
-npm i RibClientStore
+npm install rib-store
 ```
 
 ## Usage
@@ -30,12 +30,12 @@ npm i RibClientStore
 On the server we have,
 
 ```js
-let Rib = require('Rib')
-Rib.Rib.startServer(5000, 'This is much easier to program')
-Rib.setRoute('/', `${__dirname}/client/index.html`)
-Rib.setClientFolder([`${__dirname}/client/build`])
+let RibServer = require('rib-server')
+RibServer.startServer(5000, 'This is much easier to program')
+RibServer.setRoute('/', `${__dirname}/client/index.html`)
+RibServer.setClientFolder([`${__dirname}/client/build`])
 
-let myRib = new Rib()
+let myRib = new RibServer()
 myRib.onConnect((client) => {
     client.sendMSG('Welcome to this example 😃')
 })
@@ -50,10 +50,10 @@ myRib.exposeFunction(logMessage)    // allows us to call logMessage from the cli
 & on the client we have,
 
 ```js
-let RibClient = require('RibClient') // or import using a CDN
+let RibClient = require('rib-client') // or import using a CDN
 let myRib = new RibClient()
 
-RibClient.onConnect(() => {
+myRib.onConnect(() => {
     myRib.logMessage('Runs the logMessage function server side 👨🏻‍💻')
 })
 
