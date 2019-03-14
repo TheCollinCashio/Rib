@@ -1,5 +1,4 @@
 # Rib 🥩
-Realtime Integrated Backend
 
 ## What is Rib?
 Rib is an open-source framework for building realtime applications. 
