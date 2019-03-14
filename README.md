@@ -1,10 +1,10 @@
-# RIB 🥩
+# Rib 🥩
 
 ### What is Rib?
-RIB stands for Realtime Integrated Backend. RIB is an open-source framework for building realtime applications. 
+Rib *(Realtime integrated backend)* is an open-source framework for building realtime applications. 
 It provides an easy way to manage realtime communication between client and server.
 
-RIB consists of two main packages:
+Rib consists of two main packages:
 - **rib-server**: provides an easy way to create, scale, and manage realtime applications on the server.
 - **rib-client**: allows users to call server side functions directly.
 
