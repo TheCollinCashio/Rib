@@ -1,34 +1,27 @@
 # Rib 🥩
-A framework for a Realtime Integrated Backend
+
+### What is Rib?
+Rib *(Realtime integrated backend)* is an open-source framework for building realtime applications. 
+It provides an easy way to manage realtime communication between client and server.
+
+Rib consists of two main packages:
+- **rib-server**: provides an easy way to create, scale, and manage realtime applications on the server.
+- **rib-client**: allows users to call server side functions directly.
 
 ## Getting Started
-
-These instructions will show you how simple it is to create a real time application using Rib.
-
-### Prerequisites
-
-First, you are going to need to install Rib for the dynamic server communication as well as some simple functions to start your server.
-
+### First, install all of the things 👨🏻‍💻:
 ```
-npm install rib-server
+npm install rib-server rib-client
 ```
 
-Next, you are going to need to install RibClient for the dynamic client communication 👨🏻‍💻:
-```
-npm install rib-client
-```
-
-#### Optional 🏬
-If you would like to install RibClientStore, a simple state management solution for frontend frameworks, please install the following:
-
+### Optional 🏬
+If you would like a simple state management solution for frontend frameworks, please install the following:
 ```
 npm install rib-store
 ```
 
 ## Usage
-
-On the server we have,
-
+#### Server.js
 ```js
 let RibServer = require('rib-server')
 RibServer.startServer(5000, 'This is much easier to program')
@@ -47,8 +40,7 @@ function logMessage(msg) {
 myRib.exposeFunction(logMessage)    // allows us to call logMessage from the client
 ```
 
-& on the client we have,
-
+#### Client.js
 ```js
 let RibClient = require('rib-client') // or import using a CDN
 let myRib = new RibClient()
@@ -66,5 +58,4 @@ myRib.exposeFunctions([sendMSG])   //  allows us to call sendMSG from the server
 
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
