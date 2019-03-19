@@ -2,6 +2,7 @@ import React from 'react'
 import M from 'materialize-css'
 import RibClient from 'rib-client'
 import MSG from './components/MSG'
+import messageStore from './stores/message'
 
 let myRibClient = new RibClient()
 
@@ -43,9 +44,8 @@ export default class Message extends React.Component {
 
     componentDidMount() {
         M.AutoInit()
-        myRibClient.getMessages(messages => {
-            this.setState({ messages })
-        })
+        let storeObj = messageStore.get({ messages: [] })
+        this.unbindMessageStore = messageStore.set(storeObj, this.updateState)
     }
 
     sendMessage = (e) => {
@@ -63,7 +63,11 @@ export default class Message extends React.Component {
         this.setState({ message })
     }
 
-    updateMessages = (messages) => {
-        this.setState({ messages })
+    updateState = (newState) => {
+        this.setState(newState)
+    }
+
+    componentWillUnmount() {
+        this.unbindMessageStore()
     }
 }

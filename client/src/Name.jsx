@@ -12,8 +12,6 @@ export default class Name extends React.Component {
         this.state = {
             name: null
         }
-
-        this.unBind = appStore.set(this.state, this.changeState)
     }
 
     render(){
@@ -42,6 +40,8 @@ export default class Name extends React.Component {
     }
 
     componentDidMount() {
+        this.unBind = appStore.set(this.state, this.updateState)
+
         M.AutoInit()
     }
 
@@ -53,7 +53,7 @@ export default class Name extends React.Component {
         appStore.set({ name: e.target.value })
     }
 
-    changeState = (newState) => {
+    updateState = (newState) => {
         this.setState(newState)
     }
 

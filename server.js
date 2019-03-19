@@ -1,10 +1,17 @@
 import RibServer from 'rib-server'
+import { ServerStore } from 'rib-store'
 RibServer.startServer(5000, 'This is much easier to program')
 RibServer.setRoute('/', `${__dirname}/client/index.html`)
 RibServer.setClientFolder(`${__dirname}/client/build`)
 
 let myRib = new RibServer()
-let messages = []
+
+/*  Server Store */
+let myServerStore = new ServerStore({
+    messages: []
+})
+
+myServerStore.exposeStore('messageStore', myRib, true)
 
 //  Safely expose functions
 myRib.possibleClientFunctions(['sendMSG', 'bindLog'])
@@ -36,7 +43,11 @@ function sendMSG(message, func, client) {
             name: client.name,
             message: message
         }
-        messages.push(msgObj)
+
+        let storeObj = myServerStore.get({ messages: [] })
+        let messages = [...storeObj.messages, msgObj]
+        myServerStore.set({ messages })
+
         func('MSG Sent')
     }
 }
