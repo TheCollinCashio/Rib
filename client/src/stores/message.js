@@ -7,6 +7,6 @@ let message = new ClientStore({
     messages: []
 })
 
-message.bindToServerStore(myRib, 'messageStore')
+message.bindToServerStore('messageStore', myRib)
 
 export default message
