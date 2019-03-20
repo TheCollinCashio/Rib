@@ -43,7 +43,7 @@ myRib.exposeFunction(logMessage)    // allows us to call logMessage from the cli
 #### Client.js
 ```js
 let RibClient = require('rib-client').default // or import using a CDN
-let myRib = new RibClient()
+let myRib = new RibClient('http://localhost:5000/')
 
 myRib.onConnect(() => {
     myRib.logMessage('Runs the logMessage function server side 👨🏻‍💻')
