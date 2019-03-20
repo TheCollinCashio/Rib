@@ -23,7 +23,7 @@
     "node",
     "live"
   ],
-  "author": "Collin Cashio & Tyler Carr",
+  "author": "Collin Cashio",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/TheCollinCashio/Rib/issues"
@@ -53,5 +53,9 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
-  }
+  },
+  "contributors": [
+    "Jacob Nance",
+    "Tyler Carr"
+  ]
 }
