@@ -1,7 +1,7 @@
 # Rib 🥩
 
 ### What is Rib?
-Rib *(Realtime integrated backend)* is an open-source framework for building realtime applications. 
+Rib *(Realtime integrated backend)* is an open-source framework for building real-time applications. 
 It provides an easy way to manage realtime communication between client and server.
 
 Rib consists of two main packages:
@@ -12,12 +12,6 @@ Rib consists of two main packages:
 ### First, install all of the things 👨🏻‍💻:
 ```
 npm install rib-server rib-client
-```
-
-### Optional 🏬
-If you would like a simple state management solution for frontend frameworks, please install the following:
-```
-npm install rib-store
 ```
 
 ## Usage
