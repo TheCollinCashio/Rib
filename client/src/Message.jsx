@@ -48,14 +48,13 @@ export default class Message extends React.Component {
         this.unbindMessageStore = messageStore.set(storeObj, this.updateState)
     }
 
-    sendMessage = (e) => {
+    sendMessage = async (e) => {
         e.preventDefault()
         let { message } = this.state
-        myRibClient.sendMSG(message, res => {
-            if (res === 'MSG Sent') {
-                console.log('Did it')
-            }
-        })
+        let res = await myRibClient.sendMSG(message)
+        if (res === 'MSG Sent') {
+            console.log('Did it')
+        }
         this.updateMessage('')
     }
 

@@ -57,11 +57,10 @@ export default class Name extends React.Component {
         this.setState(newState)
     }
 
-    submitName = (e) => {
+    submitName = async (e) => {
         e.preventDefault()
-        myRibClient.setName(this.state.name, res => {
-            console.log(res)
-            this.props.history.push('/message')
-        })
+        let res = await myRibClient.setName(this.state.name)
+        console.log(res)
+        this.props.history.push('/message')
     }
 }

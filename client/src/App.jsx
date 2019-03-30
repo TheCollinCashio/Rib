@@ -41,11 +41,6 @@ export default class App extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-)
-
 function sendMSG(msg) {
     console.log(msg)
 }

@@ -22,11 +22,11 @@ myRib.onConnect((client) => {
     myRib.sendMSG('WE HAVE A NEW PLAYER IN TOWN...', { exclude: client })
 })
 
-function setName(name, func, client) {
+function setName(name, client) {
     client.name = name
     client.sendMSG(`Welcome, ${name}`)
     myRib.sendMSG(`Their name is ${name}...`, { exclude: client })
-    func('Name set on server')
+    return 'Name Set On Server'
 }
 
 function getMessages(func, client) {
@@ -35,7 +35,8 @@ function getMessages(func, client) {
     }
 }
 
-function sendMSG(message, func, client) {
+function sendMSG(message, client) {
+    let didSendMessage = false
     if (client.name) {
         myRib.concealFunction(setName, client)
 
@@ -47,9 +48,10 @@ function sendMSG(message, func, client) {
         let storeObj = myServerStore.get({ messages: [] })
         let messages = [...storeObj.messages, msgObj]
         myServerStore.set({ messages })
-
-        func('MSG Sent')
+        didSendMessage = true
     }
+
+    return didSendMessage
 }
 
 myRib.exposeFunctions([setName, getMessages, sendMSG])
