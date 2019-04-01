@@ -23,14 +23,14 @@ npm install rib-store
 ## Usage
 #### Server.js
 ```js
-let RibServer = require('rib-server').default
-RibServer.startServer(5000, 'This is much easier to program')
-RibServer.setRoute('/', `${__dirname}/client/index.html`)
+let RibServer = require("rib-server").default
+RibServer.startServer(5000, "This is much easier to program")
+RibServer.setRoute("/", `${__dirname}/client/index.html`)
 RibServer.setClientFolder(`${__dirname}/client/build`)
 
 let myRib = new RibServer()
 myRib.onConnect((client) => {
-    client.sendMSG('Welcome to this example 😃')
+    myRib.sendMSG("Welcome to this example 😃", { query: client })
 })
 
 function logMessage(msg) {
@@ -42,11 +42,11 @@ myRib.exposeFunction(logMessage)    // allows us to call logMessage from the cli
 
 #### Client.js
 ```js
-let RibClient = require('rib-client').default // or import using a CDN
-let myRib = new RibClient('http://localhost:5000/')
+let RibClient = require("rib-client").default // or import using a CDN
+let myRib = new RibClient("http://localhost:5000/")
 
 myRib.onConnect(() => {
-    myRib.logMessage('Runs the logMessage function server side 👨🏻‍💻')
+    myRib.logMessage("Runs the logMessage function server side 👨🏻‍💻")
 })
 
 function sendMSG(msg) {

@@ -18,14 +18,14 @@ myRib.possibleClientFunctions(['sendMSG', 'bindLog'])
 
 myRib.onConnect((client) => {
     myRib.concealFunction(setName, client)
-    client.sendMSG('Welcome to this example app.')
-    myRib.sendMSG('WE HAVE A NEW PLAYER IN TOWN...', { exclude: client })
+    myRib.sendMSG('Welcome to this example app.', { query: client })
+    myRib.sendMSG('WE HAVE A NEW PLAYER IN TOWN...', { query: { _ribId: { $ne: client._ribId } }})
 })
 
 function setName(name, client) {
     client.name = name
-    client.sendMSG(`Welcome, ${name}`)
-    myRib.sendMSG(`Their name is ${name}...`, { exclude: client })
+    myRib.sendMSG(`Welcome, ${name}`, { query: client })
+    myRib.sendMSG(`Their name is ${name}...`, { query: { _ribId: { $ne: client._ribId } }})
     return 'Name Set On Server'
 }
 
