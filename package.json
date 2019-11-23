@@ -1,0 +1,36 @@
+{
+  "name": "rib",
+  "version": "1.0.0",
+  "description": "### What is Rib? Rib *(Realtime integrated backend)* is an open-source framework for building real-time applications.  It provides an easy way to manage realtime communication between client and server.",
+  "main": "index.js",
+  "scripts": {
+    "server": "node server/server.js",
+    "server2": "node server/server2.js",
+    "test": "concurrently --kill-others-on-fail \"redis-server\" \"npm run server\" \"npm run server2\" \"react-scripts test\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheCollinCashio/Rib.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheCollinCashio/Rib/issues"
+  },
+  "homepage": "https://github.com/TheCollinCashio/Rib#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "jest": "^24.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "^3.2.0",
+    "ts-jest": "^24.2.0"
+  },
+  "dependencies": {
+    "@types/node": "^12.12.12",
+    "@types/react": "^16.9.12",
+    "@types/react-dom": "^16.9.4",
+    "concurrently": "^5.0.0",
+    "typescript": "^3.7.2"
+  }
+}
