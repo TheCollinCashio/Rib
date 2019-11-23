@@ -1,61 +1,36 @@
 {
   "name": "rib",
   "version": "1.0.0",
-  "description": "A framework for a Realtime Integrated Backend",
-  "main": "starter.js",
-  "directories": {
-    "client": "client"
-  },
+  "description": "### What is Rib? Rib *(Realtime integrated backend)* is an open-source framework for building real-time applications.  It provides an easy way to manage realtime communication between client and server.",
+  "main": "index.js",
   "scripts": {
-    "buildtest": "webpack -d --watch --config ./webpack.config.js;",
-    "start": "nodemon"
+    "server": "node server/server.js",
+    "server2": "node server/server2.js",
+    "test": "concurrently --kill-others-on-fail \"redis-server\" \"npm run server\" \"npm run server2\" \"react-scripts test\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheCollinCashio/Rib.git"
   },
-  "keywords": [
-    "realtime",
-    "integrated",
-    "backend",
-    "framework",
-    "js",
-    "node",
-    "live"
-  ],
-  "author": "Collin Cashio",
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/TheCollinCashio/Rib/issues"
   },
   "homepage": "https://github.com/TheCollinCashio/Rib#readme",
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "@types/jest": "^24.0.23",
+    "jest": "^24.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "^3.2.0",
+    "ts-jest": "^24.2.0"
   },
   "dependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/node": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/polyfill": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.4.0",
-    "babel-loader": "^8.0.5",
-    "css-loader": "^2.1.1",
-    "materialize-css": "^1.0.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "^4.3.1",
-    "rib-client": "^1.1.4",
-    "rib-server": "^1.1.6",
-    "rib-store": "^1.0.11",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
-  },
-  "contributors": [
-    "Jacob Nance",
-    "Tyler Carr"
-  ]
+    "@types/node": "^12.12.12",
+    "@types/react": "^16.9.12",
+    "@types/react-dom": "^16.9.4",
+    "concurrently": "^5.0.0",
+    "typescript": "^3.7.2"
+  }
 }

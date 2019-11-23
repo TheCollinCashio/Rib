@@ -20,7 +20,7 @@ npm install rib-server rib-client
 let RibServer = require("rib-server").default
 RibServer.startServer(5000, "This is much easier to program")
 RibServer.setRoute("/", `${__dirname}/client/index.html`)
-RibServer.setClientFolder(`${__dirname}/client/build`)
+RibServer.setClientFolder({ path: "/Home/Client/", fullPath: `${ __dirname }/Home/Client/` })
 
 let myRib = new RibServer()
 myRib.onConnect((client) => {
