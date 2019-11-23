@@ -1,11 +1,3 @@
 ## Node Modules
 node_modules/
 
-## Build Folder
-client/build/
-
-## env file
-.env
-
-## Jetbrains project files
-.idea
