@@ -16,6 +16,20 @@ describe('SERVER 2', () => {
         }, undefined, 'postMessage');
     }, 20000);
 
+    test('Set Client Name', async () => {
+        //@ts-ignore
+        await myRibClient2.setName('David');
+    })
+
+    test('POF Test', (done) => {
+        setTimeout(async () => {
+            //@ts-ignore
+            let names = await myRibClient2.getNames();
+            expect(names).toContain('Collin');
+            done();
+        }, 400)
+    })
+
     test('Simple Server Function', async () => {
         //@ts-ignore
         let val = await myRibClient2.add(1, 4);
