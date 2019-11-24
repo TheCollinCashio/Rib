@@ -4,9 +4,11 @@
   "description": "### What is Rib? Rib *(Realtime integrated backend)* is an open-source framework for building real-time applications.  It provides an easy way to manage realtime communication between client and server.",
   "main": "index.js",
   "scripts": {
-    "server": "node server/server.js",
-    "server2": "node server/server2.js",
-    "test": "concurrently --kill-others-on-fail \"redis-server\" \"npm run server\" \"npm run server2\" \"react-scripts test\""
+    "server": "node tests/server/server.js",
+    "server2": "node tests/server/server2.js",
+    "client1": "jest tests/client/Client1.test.ts",
+    "client2": "jest tests/client/Client2.test.ts",
+    "test": "concurrently --kill-others-on-fail \"redis-server\" \"npm run server\" \"npm run server2\" \"npm run client1\" \"npm run client2\""
   },
   "repository": {
     "type": "git",

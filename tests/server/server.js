@@ -1,4 +1,4 @@
-let RibServer = require("../Rib-Server/lib/RibServer").default
+let RibServer = require("../../Rib-Server/lib/RibServer").default
 const PORT = 5000
 RibServer.startServer(PORT)
 RibServer.setRedisUrl('//localhost:6379')
@@ -15,6 +15,7 @@ myRib.onConnect(async (client) => {
 })
 
 function postMessage(message, client) {
+    console.log('server 1 post')
     myRib.postMessage(message, { query: { _ribId: { $ne: client._ribId } }});
 }
 
