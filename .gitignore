@@ -1,5 +1,7 @@
 ## Node Modules
 node_modules/
+Rib-Client/node_modules/
+Rib-Server/node_modules/
 
 ## Test Dump
 dump.rdb
