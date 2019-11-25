@@ -8,13 +8,16 @@
     "server2": "node tests/server/server.js 6000",
     "client1": "jest tests/client/Client1.test.ts",
     "client2": "jest tests/client/Client2.test.ts",
-    "test": "concurrently --kill-others-on-fail \"redis-server\" \"npm run server1\" \"npm run server2\" \"npm run client1\" \"npm run client2\""
+    "test": "concurrently --kill-others-on-fail \"redis-server\" \"npm run server1\" \"npm run server2\" \"npm run client1\" \"npm run client2\"",
+    "pub": "npm run pub_server; npm run pub_client;",
+    "pub_server": "cd Rib-Server; npm run pub;",
+    "pub_client": "cd Rib-Client; npm run pub;"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheCollinCashio/Rib.git"
   },
-  "author": "",
+  "author": "Collin Cashio",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TheCollinCashio/Rib/issues"

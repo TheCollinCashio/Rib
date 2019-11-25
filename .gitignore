@@ -1,7 +1,8 @@
 ## Node Modules
 node_modules/
-Rib-Client/node_modules/
-Rib-Server/node_modules/
+
+## VSCODE
+.vscode/
 
 ## Test Dump
 dump.rdb
