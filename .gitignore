@@ -1,5 +1,8 @@
 ## Node Modules
 node_modules/
 
+## VSCODE
+.vscode/
+
 ## Test Dump
 dump.rdb
