@@ -24,7 +24,7 @@ RibServer.setClientFolder({ path: "/Home/Client/", fullPath: `${ __dirname }/Hom
 
 let myRib = new RibServer()
 myRib.onConnect((client) => {
-    myRib.sendMSG("Welcome to this example 😃", { query: client })
+    myRib.clientFunctions.sendMSG("Welcome to this example 😃", { query: client })
 })
 
 function logMessage(msg) {
@@ -40,7 +40,7 @@ let RibClient = require("rib-client").default // or import using a CDN
 let myRib = new RibClient("http://localhost:5000/")
 
 myRib.onConnect(() => {
-    myRib.logMessage("Runs the logMessage function server side 👨🏻‍💻")
+    myRib.serverFunctions.logMessage("Runs the logMessage function server side 👨🏻‍💻")
 })
 
 function sendMSG(msg) {
