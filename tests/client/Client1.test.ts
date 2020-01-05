@@ -1,12 +1,12 @@
 import RibClient from '../../Rib-Client/src/RibClient';
 
-let myRibClient1: RibClient
+let myRibClient1: RibClient<{setName: (name: string) => Promise<void>, getNames: () => Promise<string[]>, add: (x: number, y: number) => Promise<number>, postMessage: (string) => Promise<void>}>;
 
 describe('SERVER 1', () => {
   myRibClient1 = new RibClient("http://localhost:5000/", false);
   myRibClient1.onConnect(() => {
     //@ts-ignore
-    myRibClient1.postMessage('Hello from client 1');
+    myRibClient1.serverFunctions.postMessage('Hello from client 1');
   });
 
   test('Expose Post Function', async (done) => {
@@ -18,13 +18,13 @@ describe('SERVER 1', () => {
 
   test('Set Client Name', async () => {
     //@ts-ignore
-    await myRibClient1.setName('Collin');
+    await myRibClient1.serverFunctions.setName('Collin');
   })
 
   test('POF Test', (done) => {
     setTimeout(async () => {
       //@ts-ignore
-      let names = await myRibClient1.getNames();
+      let names = await myRibClient1.serverFunctions.getNames();
       expect(names).toContain('David')
       done();
     }, 400)
@@ -32,7 +32,7 @@ describe('SERVER 1', () => {
 
   test('Simple Server Function', async () => {
     //@ts-ignore
-    let val = await myRibClient1.add(1, 4);
+    let val = await myRibClient1.serverFunctions.add(1, 4);
     expect(val).toBe(5);
   });
 
@@ -41,7 +41,7 @@ describe('SERVER 1', () => {
     myRibClient1 = new RibClient("http://localhost:5000/", false);
     myRibClient1.onConnect(async () => {
       //@ts-ignore
-      let name = await myRibClient1.getName();
+      let name = await myRibClient1.serverFunctions.getName();
       expect(name).toBe('Collin');
       done();
     });
